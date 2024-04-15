@@ -3,7 +3,6 @@ version: '3'
 services:
   laravel:
     image: orchisltd/laravel:10
-    user: "1000:1000"
     ports:
       - '${APP_PORT:-0}:80'
     volumes:
