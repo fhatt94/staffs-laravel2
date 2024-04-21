@@ -22,9 +22,21 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('chirps', ChirpController::class)
-    ->only(['index', 'store', 'edit', 'update', 'destroy'])
-    ->middleware(['auth', 'verified']); 
+// Define the chirps resource route within its own middleware group
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('chirps', ChirpController::class)
+        ->only(['index', 'store', 'edit', 'update', 'destroy']);
+
+    // Additional chirps routes
+    Route::post(
+        '/chirps/{chirp}/addToFavourites',
+        [ChirpController::class, 'addToFavourites']
+    )->name('chirps.favourites.add');
+    Route::get(
+        '/chirps/favourites',
+        [ChirpController::class, 'favourites']
+    )->name('chirps.favourites');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

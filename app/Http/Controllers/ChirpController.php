@@ -89,4 +89,36 @@ class ChirpController extends Controller
 
         return redirect(route('chirps.index'));
     }
+
+
+   /**
+    * Add the Chirp to Favourites.
+    */
+    public function addToFavourites(Chirp $chirp): RedirectResponse
+    {
+    // Retrieve 'favourites' from session or create a new collection if it doesn't exist
+    $favourites = session('favourites', collect([]));
+
+    // Add the new chirp to the favourites collection
+    $favourites->push($chirp);
+
+    // Update the session with the new favourites list
+    session(['favourites' => $favourites]);
+
+    // Redirect to the chirps index page
+    return redirect(route('chirps.index'));
+    }
+
+    /*** Show the Chirps in Favourites
+    */
+    public function favourites(): View
+    {
+        $favourites = session('favourites', collect([]));
+        return view('chirps.favourites', [
+
+          'chirps' => $favourites,
+
+        ]);
+    }
+
 }
